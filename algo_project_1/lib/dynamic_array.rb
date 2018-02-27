@@ -11,7 +11,7 @@ class DynamicArray
 
   # O(1)
   def [](index)
-    raise "index out of bounds" unless @store[index]
+    check_index(index)
     @store[index]
   end
 
@@ -22,12 +22,9 @@ class DynamicArray
 
   # O(1)
   def pop
-    if @length > 0
-      @length -= 1
-      @store[@length]
-    else
-      raise "index out of bounds"
-    end
+    check_index(@length - 1)
+    @length -= 1
+    @store[@length]
   end
 
   # O(1) ammortized; O(n) worst case. Variable because of the possible
@@ -40,14 +37,11 @@ class DynamicArray
 
   # O(n): has to shift over all the elements.
   def shift
-    if @length > 0
-      @length -= 1
-      shifted = @store[0]
-      @length.times { |i| @store[i] = @store[i + 1] }
-      shifted
-    else
-      raise "index out of bounds"
-    end
+    check_index(0)
+    @length -= 1
+    shifted = @store[0]
+    @length.times { |i| @store[i] = @store[i + 1] }
+    shifted
   end
 
   # O(n): has to shift over all the elements.
@@ -59,10 +53,12 @@ class DynamicArray
   end
 
   protected
+
   attr_accessor :capacity, :store
   attr_writer :length
 
   def check_index(index)
+    raise "index out of bounds" if index >= @length || index < 0
   end
 
   # O(n): has to copy over all the elements to the new store.

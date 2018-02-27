@@ -12,7 +12,8 @@ class RingBuffer
 
   # O(1)
   def [](index)
-    raise "index out of bounds" unless @store[@start_idx + index]
+    check_index(@start_idx + index)
+
     @store[@start_idx + index]
   end
 
@@ -23,36 +24,34 @@ class RingBuffer
 
   # O(1)
   def pop
-    if @length > 0
-      @length -= 1
-      @store[@start_idx + @length]
-    else
-      raise "index out of bounds"
-    end
+    check_index(@start_idx + @length - 1)
+
+    @length -= 1
+    @store[@start_idx + @length]
   end
 
   # O(1) ammortized
   def push(val)
     resize! unless @length < @capacity
+
     @store[@start_idx + @length] = val
     @length += 1
   end
 
   # O(1)
   def shift
-    if @length > 0
-      shifted = @store[@start_idx]
-      @start_idx += 1
-      @length -= 1
-      shifted
-    else
-      raise "index out of bounds"
-    end
+    check_index(@start_idx)
+
+    shifted = @store[@start_idx]
+    @start_idx += 1
+    @length -= 1
+    shifted
   end
 
   # O(1) ammortized
   def unshift(val)
     resize! unless @length < @capacity
+    
     @start_idx -= 1
     @store[@start_idx] = val
     @length += 1
@@ -63,6 +62,7 @@ class RingBuffer
   attr_writer :length
 
   def check_index(index)
+    raise "index out of bounds" if index >= @start_idx + @length || index < @start_idx
   end
 
   def resize!
