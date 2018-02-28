@@ -73,14 +73,6 @@ class LinkedList
   end
 
   def remove(key)
-    # node = first
-    # while node.val
-    #   if node.key == key
-    #     node.remove
-    #     return
-    #   end
-    #   node = node.next
-    # end
     self.each { |node| return node.remove if node.key == key }
   end
 
