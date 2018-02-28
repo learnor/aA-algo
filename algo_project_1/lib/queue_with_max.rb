@@ -18,19 +18,10 @@ class QueueWithMax
 
   def enqueue(val)
     @store.push(val)
-    if @max_arr.length == 0
-      @max_arr.push(val)
-    else
-      last_idx = @max_arr.length - 1
-      if @max_arr[last_idx] < val
-        (last_idx + 1).times { @max_arr.pop }
-        @max_arr.push(val)
-      elsif @max_arr[0] >= val
-        @max_arr.unshift(val)
-      else
-        @max_arr[0] = val
-      end
+    while (@max_arr.length > 0) && (@max_arr[0] < val)
+      @max_arr.shift
     end
+    @max_arr.unshift(val)
     val
   end
 
