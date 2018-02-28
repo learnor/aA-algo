@@ -46,36 +46,29 @@ class LinkedList
   end
 
   def empty?
-    @head.next.key.nil?
+    @head.next == @tail
   end
 
   def get(key)
-    # return nil unless self.include?(key)
-    node = first
-    while node.val
-      return node.val if node.key == key
-      node = node.next
-    end
-    nil
+    self.each { |node| return node.val if node.key == key }
   end
 
   def include?(key)
-    !get(key).nil?
+    self.each { |node| return true if node.key == key }
+    false
   end
 
   def append(key, val)
-    node = Node.new(key, val)
-    node.prev = @tail.prev
-    node.prev.next = node
-    node.next = @tail
-    node.next.prev = node
+    new_node = Node.new(key, val)
+    new_node.prev = @tail.prev
+    new_node.prev.next = new_node
+    new_node.next = @tail
+    new_node.next.prev = new_node
   end
 
   def update(key, val)
-    node = first
-    while node.val
+    self.each do |node|
       return node.val = val if node.key == key
-      node = node.next
     end
   end
 
