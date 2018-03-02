@@ -2,13 +2,13 @@ require_relative "heap"
 
 class Array
   def heap_sort!
-    count.times do |i|
-      BinaryMinHeap.heapify_up(self, i, i)
+    2.upto(count).each do |heap_sz|
+      BinaryMinHeap.heapify_up(self, heap_sz - 1, heap_sz)
     end
 
-    1.upto(count) do |i|
-      self[0], self[count - i] = self[count - i], self[0]
-      BinaryMinHeap.heapify_down(self, 0, count - i)
+    count.downto(2) do |heap_sz|
+      self[0], self[heap_sz - 1] = self[heap_sz - 1], self[0]
+      BinaryMinHeap.heapify_down(self, 0, heap_sz - 1)
     end
 
     self.reverse!

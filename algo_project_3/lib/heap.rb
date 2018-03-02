@@ -1,3 +1,4 @@
+require 'byebug'
 class BinaryMinHeap
   attr_reader :store, :prc
 
@@ -13,7 +14,7 @@ class BinaryMinHeap
   def extract
     @store[0], @store[-1] = @store[-1], @store[0]
     extracted = @store.pop
-    BinaryMinHeap::heapify_down(@store, 0, &@prc)
+    self.class.heapify_down(@store, 0, &@prc)
     extracted
   end
 
@@ -23,20 +24,12 @@ class BinaryMinHeap
 
   def push(val)
     @store.push(val)
-    BinaryMinHeap::heapify_up(@store, count - 1, &@prc)
+    self.class.heapify_up(@store, count - 1, &@prc)
   end
 
   public
   def self.child_indices(len, parent_index)
-    child_index_1 = parent_index * 2 + 1
-    child_index_2 = child_index_1 + 1
-    if child_index_2 < len
-      return [child_index_1, child_index_2]
-    elsif child_index_1 < len
-      return [child_index_1]
-    else
-      return []
-    end
+    [parent_index * 2 + 1, parent_index * 2 + 2].select { |i| i < len }
   end
 
   def self.parent_index(child_index)
@@ -46,8 +39,8 @@ class BinaryMinHeap
 
   def self.heapify_down(array, parent_idx, len = array.length, &prc)
     prc ||= Proc.new { |x, y| x <=> y }
-    until BinaryMinHeap::child_indices(len, parent_idx).empty?
-      child_idxs = BinaryMinHeap::child_indices(len, parent_idx)
+    until child_indices(len, parent_idx).empty?
+      child_idxs = child_indices(len, parent_idx)
       if child_idxs.length == 2
         child_idx = prc.call(array[child_idxs[0]], array[child_idxs[1]]) < 0 ? child_idxs[0] : child_idxs[1]
       else
@@ -67,7 +60,7 @@ class BinaryMinHeap
   def self.heapify_up(array, child_idx, len = array.length, &prc)
     prc ||= Proc.new { |x, y| x <=> y }
     until child_idx == 0
-      parent_idx = BinaryMinHeap::parent_index(child_idx)
+      parent_idx = parent_index(child_idx)
       if prc.call(array[parent_idx], array[child_idx]) > 0
         array[parent_idx], array[child_idx] =
           array[child_idx], array[parent_idx]
