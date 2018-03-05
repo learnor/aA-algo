@@ -29,6 +29,7 @@ class BinarySearchTree
 
   def delete(value)
     node = find(value)
+    # node has no children, simply remove it
     if node.left.nil? && node.right.nil?
       return @root = nil if @root == node
       if value > node.parent.value
@@ -36,16 +37,17 @@ class BinarySearchTree
       else
         node.parent.left = nil
       end
+    # node has two children
     elsif node.left && node.right
-      # node = node.left replace node with node.left
+      # find the largest node in its left subtree
       max_child_node = maximum(node.left)
-      # max_child_node.parent.right = nil
+      # promote that node to replace deleted node
       if node.value > node.parent.value
         node.parent.right = max_child_node
       else
         node.parent.left = max_child_node
       end
-
+      # when necessary, promote that node's child to replace its parent
       if max_child_node.left
         if max_child_node.value > max_child_node.parent.value
           max_child_node.parent.right = max_child_node.left
@@ -53,17 +55,21 @@ class BinarySearchTree
           max_child_node.parent.left = max_child_node.left
         end
       end
+      # if a node has only one child, delete it and promote its child to take its place.
     elsif node.left
-      if node.value > node.parent.value
+      if @root = node
+        @root = node.left
+      elsif node.value > node.parent.value
         node.parent.right = node.left
-      else
+      elsif node.value < node.parent.value
         node.parent.left = node.left
       end
-      node.value = max_child_node.value
     else
-      if node.value > node.parent.value
+      if @root = node
+        @root = node.right
+      elsif node.value > node.parent.value
         node.parent.right = node.right
-      else
+      elsif node.value < node.parent.value
         node.parent.left = node.right
       end
     end
