@@ -15,8 +15,8 @@ class Node
   def remove
     # optional but useful, connects previous node to next node
     # and removes self from list.
-    self.next.prev = self.prev
-    self.prev.next = self.next
+    self.next.prev = self.prev if self.next
+    self.prev.next = self.next if self.prev
     self.next = nil
     self.prev = nil
   end
@@ -78,7 +78,7 @@ class LinkedList
 
   def each
     node = first
-    while node.val
+    until node == @tail
       yield(node)
       node = node.next
     end
