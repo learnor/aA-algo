@@ -1,4 +1,3 @@
-require 'byebug'
 require_relative 'graph'
 
 # Implementing topological sort using both Khan's and Tarian's algorithms
@@ -17,13 +16,7 @@ def topological_sort(vertices)
       e.destroy!
       queue << v if v.in_edges.empty?
     end
-    # u.out_edges.each do |e|
-    #   v = e.to_vertex
-    #   e.destroy!
-    #   queue << v if v.in_edges.empty?
-    # end
     sorted << u
-    # debugger
   end
-  vertices.all? { |v| v.in_edges.empty? } ? sorted : []
+  vertices.all? { v.in_edges.empty? } ? sorted : []
 end
