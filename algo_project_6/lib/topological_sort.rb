@@ -17,6 +17,7 @@ def topological_sort(vertices)
       queue << v if v.in_edges.empty?
     end
     sorted << u
+    vertices.delete(u)
   end
-  vertices.all? { v.in_edges.empty? } ? sorted : []
+  vertices.empty? ? sorted : []
 end
